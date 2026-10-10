@@ -1,0 +1,67 @@
+// Public configuration only. Never put Sanity write tokens or private Google credentials here.
+export const weddingConfig = {
+  sanity: {
+    enabled: true,
+    projectId: 'q601itdr',
+    dataset: 'production',
+    apiVersion: '2025-02-19',
+  },
+  theme: 'burgundy',
+  groom: {
+    shortName: 'Văn Sắc',
+    fullName: 'Văn Sắc',
+    father: 'Nguyễn Văn Khuyên',
+    mother: 'Hà Thị Lương',
+    address: '',
+  },
+  bride: {
+    shortName: 'An Hạ',
+    fullName: 'An Hạ',
+    father: 'Nguyễn Văn Hoan',
+    mother: 'Phạm Thị Hòa',
+  },
+  heroImage: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1800&q=85',
+  copy: {
+    heroQuote: 'Trân trọng kính mời bạn đến chung vui trong ngày hạnh phúc của chúng mình.',
+    story: 'Chúng mình rất vui khi được chia sẻ ngày đặc biệt này cùng gia đình và bạn bè.',
+    closing: 'Hẹn gặp bạn trong ngày trọng đại.',
+    calendarDescription: 'Trân trọng kính mời bạn tới chung vui cùng Văn Sắc & An Hạ.',
+  },
+  event: {
+    datetime: '2026-11-14T11:00:00+07:00',
+    displayTime: '11:00',
+    timeNote: '',
+    lunarDate: '',
+    venueName: 'Chợ Việt Đức',
+    venueShort: 'Chợ Việt Đức',
+    venueAddress: 'Chợ Việt Đức, xã Ea Ning, Đắk Lắk',
+    mapsDirections: 'https://www.google.com/maps/dir/?api=1&destination=Ch%E1%BB%A3%20Vi%E1%BB%87t%20%C4%90%E1%BB%A9c%2C%20x%C3%A3%20Ea%20Ning%2C%20%C4%90%E1%BA%AFk%20L%E1%BA%AFk',
+    mapEmbed: 'https://www.google.com/maps?q=Ch%E1%BB%A3%20Vi%E1%BB%87t%20%C4%90%E1%BB%A9c%2C%20x%C3%A3%20Ea%20Ning%2C%20%C4%90%E1%BA%AFk%20L%E1%BA%AFk&output=embed',
+    durationMinutes: 240,
+  },
+  gallery: [
+    { src: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1200&q=85', alt: 'Chân dung cô dâu chú rể', caption: 'Ngày mình chung đôi' },
+    { src: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=85', alt: 'Khoảnh khắc trong lễ cưới', caption: 'Together' },
+    { src: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=85', alt: 'Cặp đôi trong ngày cưới', caption: 'A quiet promise' },
+    { src: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1200&q=85', alt: 'Nhẫn cưới', caption: 'Forever' },
+    { src: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=1200&q=85', alt: 'Cặp đôi bên nhau', caption: 'Us' },
+    { src: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=1200&q=85', alt: 'Trang trí lễ cưới', caption: 'The celebration' },
+  ],
+  music: {
+    url: 'https://assets.mixkit.co/music/preview/mixkit-romantic-wedding-flute-and-piano-melody-552.mp3',
+    startVolume: 0.5,
+    targetVolume: 1,
+    fadeDurationMs: 8000,
+  },
+  banking: {
+    bankName: 'Techcombank',
+    accountNumber: '19038213471013',
+    accountName: '',
+    qrCodeUrl: '',
+    message: 'Trân trọng cảm ơn tình cảm của bạn!',
+  },
+  rsvp: {
+    endpoint: 'https://script.google.com/macros/s/AKfycbzm6-m6r-KbY2OVaaaTSDNtTy-smz3LsCybrrX_DSqpIdBe43fQSUslDHD-l7nruhcJlw/exec',
+    deadline: '',
+  },
+};
