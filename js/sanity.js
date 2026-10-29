@@ -32,12 +32,15 @@ export async function loadWeddingConfig() {
     return fallback;
   }
 
-  // ĐÃ SỬA CHUẨN: Dùng weddingInfo và gọi đúng tên biến heroAvatar, photos
-  const query = `*[_type == "weddingInfo" && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]{
+  // TRUY VẤN BAO TRỌN GÓI: Quét cả 2 loại document và mọi tên biến ảnh
+  const query = `*[_type in ["wedding", "weddingInfo"] && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]{
     title, groom, bride, heroQuote, story, closing,
-    "heroImageUrl": heroAvatar.asset->url,
+    "heroImageUrl": coalesce(heroAvatar.asset->url, heroImage.asset->url, avatar.asset->url, mainImage.asset->url),
     event,
-    "galleryUrls": photos[]{"src": asset->url, "alt": "Ảnh cưới", "caption": ""},
+    "galleryUrls": coalesce(
+      photos[]{"src": asset->url, "alt": "Ảnh cưới", "caption": ""},
+      gallery[]{"src": asset->url, "alt": "Ảnh cưới", "caption": ""}
+    ),
     "music": music{
       ...,
       "fileUrl": file.asset->url
@@ -53,7 +56,7 @@ export async function loadWeddingConfig() {
     const response = await fetch(url, {
       method: 'GET',
       headers: { Accept: 'application/json' },
-      cache: 'no-store', // Ép trình duyệt luôn tải ảnh và dữ liệu mới nhất
+      cache: 'no-store' // Ép tải mới
     });
 
     if (!response.ok) {
@@ -68,7 +71,7 @@ export async function loadWeddingConfig() {
 
     return mergeSanity(fallback, payload.result);
   } catch (error) {
-    console.error('Không tải được dữ liệu Sanity. Kiểm tra API version và CORS origins.', error);
+    console.error('Không tải được dữ liệu Sanity:', error);
     return fallback;
   }
 }
@@ -99,6 +102,7 @@ function mergeSanity(base, remote) {
     if (typeof out.music.fileUrl !== 'string' || !out.music.fileUrl.trim()) out.music.fileUrl = '';
     if (typeof out.music.url !== 'string' || !out.music.url.trim()) out.music.url = base.music.url;
   }
+  
   if (remote.rsvpDeadline) out.rsvp.deadline = remote.rsvpDeadline;
   if (remote.rsvpEndpoint) out.rsvp.endpoint = remote.rsvpEndpoint;
 
