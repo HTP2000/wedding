@@ -32,7 +32,7 @@ export async function loadWeddingConfig() {
     return fallback;
   }
 
-  const query = `*[_type == "wedding" && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]{
+  const query = `*[_type == "weddingInfo" && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]{
     title, groom, bride, heroQuote, story, closing,
     "heroImageUrl": coalesce(heroImage.asset->url, heroImage.image.asset->url, heroImage.photo.asset->url, heroImageUrl),
     event,
