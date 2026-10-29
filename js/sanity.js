@@ -32,9 +32,10 @@ export async function loadWeddingConfig() {
     return fallback;
   }
 
+  // Đã thêm avatar, mainImage, anhDaiDien vào đầu hàm coalesce để ưu tiên lấy ảnh mới nhất
   const query = `*[_type == "weddingInfo" && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]{
     title, groom, bride, heroQuote, story, closing,
-    "heroImageUrl": coalesce(heroImage.asset->url, heroImage.image.asset->url, heroImage.photo.asset->url, heroImageUrl),
+    "heroImageUrl": coalesce(avatar.asset->url, mainImage.asset->url, anhDaiDien.asset->url, heroImage.asset->url, heroImage.image.asset->url, heroImage.photo.asset->url, heroImageUrl),
     event,
     "galleryUrls": gallery[]{"src": coalesce(asset->url, image.asset->url, photo.asset->url, imageUrl), "alt": coalesce(alt, image.alt, photo.alt, caption, "Ảnh cưới"), "caption": coalesce(caption, "")},
     "music": music{
@@ -52,6 +53,7 @@ export async function loadWeddingConfig() {
     const response = await fetch(url, {
       method: 'GET',
       headers: { Accept: 'application/json' },
+      cache: 'no-store', // CHỐNG LƯU CACHE: Ép trình duyệt luôn tải dữ liệu mới nhất
     });
 
     if (!response.ok) {
