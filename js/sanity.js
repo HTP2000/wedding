@@ -32,16 +32,13 @@ export async function loadWeddingConfig() {
     return fallback;
   }
 
-  // Đã thêm avatar, mainImage, anhDaiDien vào đầu hàm coalesce để ưu tiên lấy ảnh mới nhất
-  const query = `*[_type == "weddingInfo" && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]{
+  // TRẢ VỀ ĐÚNG SCHEMA GỐC LÀ "wedding" VÀ LẤY ẢNH "heroImage"
+  const query = `*[_type == "wedding" && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]{
     title, groom, bride, heroQuote, story, closing,
-    "heroImageUrl": coalesce(avatar.asset->url, mainImage.asset->url, anhDaiDien.asset->url, heroImage.asset->url, heroImage.image.asset->url, heroImage.photo.asset->url, heroImageUrl),
+    "heroImageUrl": heroImage.asset->url,
     event,
-    "galleryUrls": gallery[]{"src": coalesce(asset->url, image.asset->url, photo.asset->url, imageUrl), "alt": coalesce(alt, image.alt, photo.alt, caption, "Ảnh cưới"), "caption": coalesce(caption, "")},
-    "music": music{
-      ...,
-      "fileUrl": file.asset->url
-    },
+    "galleryUrls": gallery[]{"src": asset->url, "alt": "Ảnh cưới"},
+    music,
     rsvpDeadline, rsvpEndpoint,
     banking { bankName, accountNumber, accountName, message, "qrCodeUrl": qrCode.asset->url }
   }`;
@@ -53,7 +50,7 @@ export async function loadWeddingConfig() {
     const response = await fetch(url, {
       method: 'GET',
       headers: { Accept: 'application/json' },
-      cache: 'no-store', // CHỐNG LƯU CACHE: Ép trình duyệt luôn tải dữ liệu mới nhất
+      cache: 'no-store', // Ép trình duyệt luôn tải dữ liệu và hình ảnh mới nhất
     });
 
     if (!response.ok) {
@@ -96,10 +93,9 @@ function mergeSanity(base, remote) {
 
   if (remote.music && typeof remote.music === 'object') {
     out.music = { ...out.music, ...remote.music };
-    // Prefer the Sanity-hosted file asset URL; keep music.url as a fallback.
-    if (typeof out.music.fileUrl !== 'string' || !out.music.fileUrl.trim()) out.music.fileUrl = '';
     if (typeof out.music.url !== 'string' || !out.music.url.trim()) out.music.url = base.music.url;
   }
+  
   if (remote.rsvpDeadline) out.rsvp.deadline = remote.rsvpDeadline;
   if (remote.rsvpEndpoint) out.rsvp.endpoint = remote.rsvpEndpoint;
 
