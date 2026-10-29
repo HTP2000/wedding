@@ -28,7 +28,7 @@ export const weddingConfig = {
     calendarDescription: 'Trân trọng kính mời bạn tới chung vui cùng Văn Sắc & An Hạ.',
   },
   event: {
-    datetime: '2026-18-14T11:00:00+07:00',
+    datetime: '2026-11-18T11:00:00+07:00',
     displayTime: '11:00',
     timeNote: '',
     lunarDate: '',
