@@ -32,13 +32,16 @@ export async function loadWeddingConfig() {
     return fallback;
   }
 
-  // TRẢ VỀ ĐÚNG SCHEMA GỐC LÀ "wedding" VÀ LẤY ẢNH "heroImage"
-  const query = `*[_type == "wedding" && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]{
+  // ĐÃ SỬA CHUẨN: Dùng weddingInfo và gọi đúng tên biến heroAvatar, photos
+  const query = `*[_type == "weddingInfo" && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]{
     title, groom, bride, heroQuote, story, closing,
-    "heroImageUrl": heroImage.asset->url,
+    "heroImageUrl": heroAvatar.asset->url,
     event,
-    "galleryUrls": gallery[]{"src": asset->url, "alt": "Ảnh cưới"},
-    music,
+    "galleryUrls": photos[]{"src": asset->url, "alt": "Ảnh cưới", "caption": ""},
+    "music": music{
+      ...,
+      "fileUrl": file.asset->url
+    },
     rsvpDeadline, rsvpEndpoint,
     banking { bankName, accountNumber, accountName, message, "qrCodeUrl": qrCode.asset->url }
   }`;
@@ -50,7 +53,7 @@ export async function loadWeddingConfig() {
     const response = await fetch(url, {
       method: 'GET',
       headers: { Accept: 'application/json' },
-      cache: 'no-store', // Ép trình duyệt luôn tải dữ liệu và hình ảnh mới nhất
+      cache: 'no-store', // Ép trình duyệt luôn tải ảnh và dữ liệu mới nhất
     });
 
     if (!response.ok) {
@@ -93,9 +96,9 @@ function mergeSanity(base, remote) {
 
   if (remote.music && typeof remote.music === 'object') {
     out.music = { ...out.music, ...remote.music };
+    if (typeof out.music.fileUrl !== 'string' || !out.music.fileUrl.trim()) out.music.fileUrl = '';
     if (typeof out.music.url !== 'string' || !out.music.url.trim()) out.music.url = base.music.url;
   }
-  
   if (remote.rsvpDeadline) out.rsvp.deadline = remote.rsvpDeadline;
   if (remote.rsvpEndpoint) out.rsvp.endpoint = remote.rsvpEndpoint;
 
